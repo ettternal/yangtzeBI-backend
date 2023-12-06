@@ -88,3 +88,8 @@ cos:
     secretKey: xxx
     region: xxx
     bucket: xxx
+# ai接口配置
+yuapi:
+  client:
+    access-key: etkm94wuy6e71fgb04l740u98gkykrkl
+    SecretKey: huxvwfbxy2yzhqzu2ljtp050mwltcg70
