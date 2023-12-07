@@ -1,5 +1,6 @@
 package com.kingyqh.yangtzebi.controller;
 
+import cn.hutool.core.io.FileUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.google.gson.Gson;
@@ -13,6 +14,7 @@ import com.kingyqh.yangtzebi.constant.UserConstant;
 import com.kingyqh.yangtzebi.exception.BusinessException;
 import com.kingyqh.yangtzebi.exception.ThrowUtils;
 import com.kingyqh.yangtzebi.manager.AiManager;
+import com.kingyqh.yangtzebi.mapper.RedisLimiterManager;
 import com.kingyqh.yangtzebi.model.dto.chart.*;
 import com.kingyqh.yangtzebi.model.entity.*;
 import com.kingyqh.yangtzebi.model.vo.BiResponse;
@@ -30,6 +32,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Array;
+import java.util.Arrays;
+import java.util.List;
+
 
 /**
  * 接口
@@ -48,6 +54,8 @@ public class ChartController {
 
     @Resource
     private AiManager aiManager;
+    @Resource
+    private RedisLimiterManager redisLimiterManager;
 
     private final static Gson GSON = new Gson();
 
@@ -230,9 +238,23 @@ public class ChartController {
         // 校验
         ThrowUtils.throwIf(StringUtils.isBlank(goal), ErrorCode.PARAMS_ERROR, "目标为空");
         ThrowUtils.throwIf(StringUtils.isNotBlank(chartName) && chartName.length() > 100, ErrorCode.PARAMS_ERROR, "名称过长");
+        //校验文件
+        String originalFilename = multipartFile.getName();
+        long size = multipartFile.getSize();
+        //1.文件大小
+        final long ONE_MB = 1024*1024L;
+        ThrowUtils.throwIf(size > ONE_MB,ErrorCode.PARAMS_ERROR,"文件超过1M");
+        //2.校验文件后缀 aaa.png
+        //2.1获取文件名的后缀
+        String suffix = FileUtil.getSuffix(originalFilename);
+        //2.2定义一个允许传入的文件后缀名列表
+        final List<String> vaildFileSuffix = Arrays.asList("png","jpg","webp","jpeg");
+        ThrowUtils.throwIf(!vaildFileSuffix.contains(suffix),ErrorCode.PARAMS_ERROR,"文件类型不合法");
+        // 限流判断，每个用户每秒限流
+        User loginUser = userService.getLoginUser(request);
+        redisLimiterManager.doRateLimit("genChartByAi_" + loginUser.getId());
 
         // 获取登录⽤户信息
-        User loginUser = userService.getLoginUser(request);
         // 模拟BI模型的ID
         long biModelId = 1696419536644931586L;
 

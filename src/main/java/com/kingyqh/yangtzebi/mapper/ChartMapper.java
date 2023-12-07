@@ -3,6 +3,9 @@ package com.kingyqh.yangtzebi.mapper;
 import com.kingyqh.yangtzebi.model.entity.Chart;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 
+import java.util.List;
+import java.util.Map;
+
 /**
 * @author serendipity
 * @description 针对表【chart(图表信息表)】的数据库操作Mapper
