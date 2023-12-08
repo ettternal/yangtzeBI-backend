@@ -11,12 +11,12 @@
 区别于传统 BI，用户只需要导入原始数据集、并输入分析诉求，就能自动生成可视化图表及分析结论，实现数据分析的降本增效.
 
 登录页面：
-![img.png](img.png)
+![img.png](photoes/img.png)
 数据智能分析页面：
-![img_1.png](img_1.png)
-![img_2.png](img_2.png)
+![img_1.png](photoes/img_1.png)
+![img_2.png](photoes/img_2.png)
 图表展示管理页面：
-![img_3.png](img_3.png)
+![img_3.png](photoes/img_3.png)
 
 ## 智能BI业务流程
 
@@ -30,7 +30,7 @@
 3. 把处理后的数据输入给AI模型（调用AI接口）==>  AI模型提供图表信息，结论文本 
 4. 图表信息，结论文本在前端进行展示
 5. 项目架构图：
-   ![img_4.png](img_4.png)
+   ![img_4.png](photoes/img_4.png)
 
 ## 项目核心接口
 根据用户的输入（文本和文件），最后返回图表信息和结论文本
@@ -111,7 +111,7 @@ spring:
 
 3）启动项目，访问 `http://localhost:8101/api/doc.html` 即可打开接口文档，不需要写前端就能在线调试接口了~
 
-![img_5.png](img_5.png)
+![img_5.png](photoes/img_5.png)
 
 ### Redis 分布式登录
 
